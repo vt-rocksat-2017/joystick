@@ -9,10 +9,6 @@ from  pygame.locals import *
 BLACK = (0,0,0)
 WHITE = (255, 255,255)
 done = False
-YMIN = 0
-YMAX = 768
-XMIN = 0
-XMAX = 1024
 mufY = 10
 mufX = 10
 #init

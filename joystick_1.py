@@ -43,6 +43,7 @@ while done==False:
 	axis2 = joy1.get_axis(1)
 	axisSpeed = joy1.get_axis(2)
 
+	#Changing directions
 	if (axis1 < -0.5) and (mufX > 10):
 		mufX-= 1
 		print ("LEFT")
@@ -55,7 +56,8 @@ while done==False:
 	if (axis2 > 0.5) and (mufY < 650):
 		mufY += 1
 		print ("DOWN")
-
+	
+	#Speed of change
 	if (axisSpeed > .75):
 		clock.tick(1)
 	elif (axisSpeed > .5):

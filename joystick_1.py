@@ -11,6 +11,7 @@ WHITE = (255, 255,255)
 done = False
 mufY = 10
 mufX = 10
+
 #init
 pygame.joystick.init()
 pygame.init()

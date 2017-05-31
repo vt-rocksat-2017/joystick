@@ -11,10 +11,7 @@ WHITE = (255, 255,255)
 done = False
 mufY = 10
 mufX = 10
-<<<<<<< HEAD
-=======
 speed = 0
->>>>>>> refs/remotes/origin/master
 
 #init
 pygame.joystick.init()
@@ -70,7 +67,7 @@ while done==False:
 		clock.tick(60)
 		speed = 64
 		
-	if (speed != oldspeed) 
+	if (speed != oldspeed): 
 		display = "5700000000" + str(speed) + "00000000" + str(speed) + "F720"
 		print display
 		

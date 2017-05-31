@@ -34,15 +34,17 @@ while done==False:
 
 	curY = 0
 	curX = 0
-
+	
 	axis1 = joy1.get_axis(0)
 	axis2 = joy1.get_axis(1)
 	axisSpeed = joy1.get_axis(2)
-
+	
+	oldspeed = speed
+	
 	#Speed of change
 	if (axisSpeed > .75):
 		clock.tick(1)
-		speed = 8
+		speed = 10
 	elif (axisSpeed > .5):
 		clock.tick(2)
 		speed = 16
@@ -64,6 +66,10 @@ while done==False:
 	else:
 		clock.tick(60)
 		speed = 64
+		
+	if (speed != oldspeed) 
+		display = "5700000000" + str(speed) + "00000000" + str(speed) + "F720"
+		print display
 		
 	#Changing directions
 	if (axis1 < -0.5) and (axis2 < -0.5) and (mufX > 10) and (mufY > 10):

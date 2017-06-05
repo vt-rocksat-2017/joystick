@@ -29,22 +29,21 @@ if __name__ == '__main__':
 
     vhf_uhf_md01 = md01(options.ip, options.port)
 
-	#defines
-	BLACK = (0,0,0)
-	WHITE = (255, 255,255)
-	done = False
-	mufY = 10
-	mufX = 10
-	speed = 0
-
-	#init
-	pygame.joystick.init()
-	pygame.init()
-	screen = pygame.display.set_mode((1024,768))
-	muf = pygame.image.load('muffin.jpeg')
-	clock = pygame.time.Clock()
-	joy1 = pygame.joystick.Joystick(0)
-	joy1.init()
+#defines
+BLACK = (0,0,0)
+WHITE = (255, 255,255)
+done = False
+mufY = 10
+mufX = 10
+speed = 0
+#init
+pygame.joystick.init()
+pygame.init()
+screen = pygame.display.set_mode((1024,768))
+muf = pygame.image.load('muffin.jpeg')
+clock = pygame.time.Clock()
+joy1 = pygame.joystick.Joystick(0)
+joy1.init()
 
 	#LOOP
 while done==False:
@@ -127,9 +126,9 @@ while done==False:
 
 pygame.joystick.quit()
 
-    app = QtGui.QApplication(sys.argv)
-    win = MainWindow(options.ip, options.port)
-    win.setCallback(vhf_uhf_md01)
-    win.show()
-    sys.exit(app.exec_())
-    sys.exit()
+app = QtGui.QApplication(sys.argv)
+win = MainWindow(options.ip, options.port)
+win.setCallback(vhf_uhf_md01)
+win.show()
+sys.exit(app.exec_())
+sys.exit()

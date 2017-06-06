@@ -21,7 +21,7 @@ class MainWindow(QtGui.QWidget):
         self.setFixedHeight(600)
         self.setWindowTitle('MD01 Controller v1.0')
         self.setContentsMargins(0,0,0,0)
-        
+
         self.ip = ip
         self.port = port
 
@@ -54,27 +54,27 @@ class MainWindow(QtGui.QWidget):
         self.callback = callback
 
     def connectSignals(self):
-        self.azPlusPtOneButton.clicked.connect(self.azPlusPtOneButtonClicked) 
-        self.azPlusOneButton.clicked.connect(self.azPlusOneButtonClicked) 
-        self.azPlusTenButton.clicked.connect(self.azPlusTenButtonClicked) 
-        self.azMinusPtOneButton.clicked.connect(self.azMinusPtOneButtonClicked) 
-        self.azMinusOneButton.clicked.connect(self.azMinusOneButtonClicked) 
-        self.azMinusTenButton.clicked.connect(self.azMinusTenButtonClicked) 
+        self.azPlusPtOneButton.clicked.connect(self.azPlusPtOneButtonClicked)
+        self.azPlusOneButton.clicked.connect(self.azPlusOneButtonClicked)
+        self.azPlusTenButton.clicked.connect(self.azPlusTenButtonClicked)
+        self.azMinusPtOneButton.clicked.connect(self.azMinusPtOneButtonClicked)
+        self.azMinusOneButton.clicked.connect(self.azMinusOneButtonClicked)
+        self.azMinusTenButton.clicked.connect(self.azMinusTenButtonClicked)
         self.azTextBox.returnPressed.connect(self.azTextBoxReturnPressed)
 
-        self.elPlusPtOneButton.clicked.connect(self.elPlusPtOneButtonClicked) 
-        self.elPlusOneButton.clicked.connect(self.elPlusOneButtonClicked) 
-        self.elPlusTenButton.clicked.connect(self.elPlusTenButtonClicked) 
-        self.elMinusPtOneButton.clicked.connect(self.elMinusPtOneButtonClicked) 
-        self.elMinusOneButton.clicked.connect(self.elMinusOneButtonClicked) 
-        self.elMinusTenButton.clicked.connect(self.elMinusTenButtonClicked) 
+        self.elPlusPtOneButton.clicked.connect(self.elPlusPtOneButtonClicked)
+        self.elPlusOneButton.clicked.connect(self.elPlusOneButtonClicked)
+        self.elPlusTenButton.clicked.connect(self.elPlusTenButtonClicked)
+        self.elMinusPtOneButton.clicked.connect(self.elMinusPtOneButtonClicked)
+        self.elMinusOneButton.clicked.connect(self.elMinusOneButtonClicked)
+        self.elMinusTenButton.clicked.connect(self.elMinusTenButtonClicked)
         self.elTextBox.returnPressed.connect(self.elTextBoxReturnPressed)
 
         self.connectButton.clicked.connect(self.connectButtonEvent)
-        self.queryButton.clicked.connect(self.queryButtonEvent) 
-        self.stopButton.clicked.connect(self.stopButtonEvent) 
+        self.queryButton.clicked.connect(self.queryButtonEvent)
+        self.stopButton.clicked.connect(self.stopButtonEvent)
         self.homeButton.clicked.connect(self.homeButtonEvent)
-        self.updateButton.clicked.connect(self.updateButtonEvent)  
+        self.updateButton.clicked.connect(self.updateButtonEvent)
         self.autoQuery_cb.stateChanged.connect(self.catchAutoQueryEvent)
 
         QtCore.QObject.connect(self.updateTimer, QtCore.SIGNAL('timeout()'), self.queryButtonEvent)
@@ -109,7 +109,7 @@ class MainWindow(QtGui.QWidget):
     def connectButtonEvent(self):
         if (not self.connected):  #Not connected, attempt to connect
             self.connected = self.callback.connect()
-            if (self.connected): 
+            if (self.connected):
                 self.connectButton.setText('Disconnect')
                 self.net_label.setText("Connected")
                 self.net_label.setStyleSheet("QLabel {  font-weight:bold; color:rgb(0,255,0) ; }")
@@ -119,7 +119,7 @@ class MainWindow(QtGui.QWidget):
                 self.portTextBox.setEnabled(False)
         else:
             self.connected = self.callback.disconnect()
-            if (not self.connected): 
+            if (not self.connected):
                 self.connectButton.setText('Connect')
                 self.net_label.setText("Disconnected")
                 self.net_label.setStyleSheet("QLabel {  font-weight:bold; color:rgb(255,0,0) ; }")
@@ -130,7 +130,7 @@ class MainWindow(QtGui.QWidget):
 
     def catchAutoQueryEvent(self, state):
         CheckState = (state == QtCore.Qt.Checked)
-        if CheckState == True:  
+        if CheckState == True:
             self.updateTimer.start()
             print self.getTimeStampGMT() + "GUI  | Started Auto Update, Interval: " + str(self.update_rate) + " [ms]"
         else:
@@ -151,7 +151,7 @@ class MainWindow(QtGui.QWidget):
     def azTextBoxReturnPressed(self):
         self.tar_az = float(self.azTextBox.text())
         self.updateAzimuth()
-    
+
     def azPlusPtOneButtonClicked(self):
         self.tar_az = self.tar_az + 0.1
         self.updateAzimuth()
@@ -177,10 +177,10 @@ class MainWindow(QtGui.QWidget):
         self.updateAzimuth()
 
     def updateAzimuth(self):
-        if self.tar_az < -180: 
+        if self.tar_az < -180:
             self.tar_az = -180
             self.azTextBox.setText(str(self.tar_az))
-        if self.tar_az > 540: 
+        if self.tar_az > 540:
             self.tar_az = 540
             self.azTextBox.setText(str(self.tar_az))
         self.az_compass.set_tar_az(self.tar_az)
@@ -189,7 +189,7 @@ class MainWindow(QtGui.QWidget):
     def elTextBoxReturnPressed(self):
         self.tar_el = float(self.elTextBox.text())
         self.updateElevation()
-    
+
     def elPlusPtOneButtonClicked(self):
         self.tar_el = self.tar_el + 0.1
         self.updateElevation()
@@ -215,10 +215,10 @@ class MainWindow(QtGui.QWidget):
         self.updateElevation()
 
     def updateElevation(self):
-        if self.tar_el < 0: 
+        if self.tar_el < 0:
             self.tar_el = 0
             self.elTextBox.setText(str(self.tar_el))
-        if self.tar_el > 180: 
+        if self.tar_el > 180:
             self.tar_el = 180
             self.elTextBox.setText(str(self.tar_el))
         self.el_compass.set_tar_el(self.tar_el)
@@ -476,30 +476,37 @@ class MainWindow(QtGui.QWidget):
     def initJoystick(self):
 	self.progressUD = QtGui.QProgressBar()
 	self.progressLR = QtGui.QProgressBar()
-
+	self.progressSpeed = QtGui.QProgressBar()
 
 	self.progressUD.setRange(-1, 1)
 	self.progressLR.setRange(-1, 1)
+	self.progressSpeed.setRange(-1, 1)
 
 	self.progressLRText = QtGui.QLabel("LEFT-RIGHT")
 	self.progressUDText = QtGui.QLabel("UP-DOWN")
+	self.progressSpText = QtGui.QLabel("SPEED")
 
 	self.progressUDText.setAlignment(QtCore.Qt.AlignRight)
 	self.progressLRText.setAlignment(QtCore.Qt.AlignRight)
+	self.progressSpText.setAlignment(QtCore.Qt.AlignRight)
 	self.progressUDText.setFixedWidth(80)
 	self.progressLRText.setFixedWidth(80)
+	self.progressSpText.setFixedWidth(80)
 
 	vbox = QtGui.QVBoxLayout()
 	hbox1 = QtGui.QHBoxLayout()
 	hbox2 = QtGui.QHBoxLayout()
+	hbox3 = QtGui.QHBoxLayout()
 
 	hbox1.addWidget(self.progressUDText)
 	hbox1.addWidget(self.progressUD)
 	hbox2.addWidget(self.progressLRText)
 	hbox2.addWidget(self.progressLR)
-
+	hbox3.addWidget(self.progressSpText)
+	hbox3.addWidget(self.progressSpeed)
 	vbox.addLayout(hbox1)
 	vbox.addLayout(hbox2)
+	vbox.addLayout(hbox3)
 
 	self.progress_fr.setLayout(vbox)
 

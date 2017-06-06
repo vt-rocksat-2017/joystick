@@ -16,9 +16,9 @@ class MainWindow(QtGui.QWidget):
     def __init__(self, ip, port):
         QtGui.QMainWindow.__init__(self)
 
-        self.resize(700, 700)
+        self.resize(700, 600)
         self.setFixedWidth(700)
-        self.setFixedHeight(700)
+        self.setFixedHeight(600)
         self.setWindowTitle('MD01 Controller v1.0')
         self.setContentsMargins(0,0,0,0)
         
@@ -318,7 +318,10 @@ class MainWindow(QtGui.QWidget):
         self.DnLeftButton = QtGui.QPushButton("D+L")
         self.DownButton = QtGui.QPushButton("Down")
         self.DnRightButton = QtGui.QPushButton("D+R")
-	self.JoystickBox = QtGui.QCheckBox("Use Joystick")
+	self.JoystickBox = QtGui.QCheckBox("Use Joystick", self)
+	self.JoystickBox.setStyleSheet("QCheckBox {font-size: 13px;\
+						background-color:rgb(0,0,0);\
+						color:rgb(255,255,255);}")
 
         vbox = QtGui.QVBoxLayout()
         hbox1 = QtGui.QHBoxLayout()
@@ -473,19 +476,33 @@ class MainWindow(QtGui.QWidget):
     def initJoystick(self):
 	self.progressUD = QtGui.QProgressBar()
 	self.progressLR = QtGui.QProgressBar()
-	
+
+
+	self.progressUD.setRange(-1, 1)
+	self.progressLR.setRange(-1, 1)
+
+	self.progressLRText = QtGui.QLabel("LEFT-RIGHT")
+	self.progressUDText = QtGui.QLabel("UP-DOWN")
+
+	self.progressUDText.setAlignment(QtCore.Qt.AlignRight)
+	self.progressLRText.setAlignment(QtCore.Qt.AlignRight)
+	self.progressUDText.setFixedWidth(80)
+	self.progressLRText.setFixedWidth(80)
+
 	vbox = QtGui.QVBoxLayout()
 	hbox1 = QtGui.QHBoxLayout()
 	hbox2 = QtGui.QHBoxLayout()
 
+	hbox1.addWidget(self.progressUDText)
 	hbox1.addWidget(self.progressUD)
+	hbox2.addWidget(self.progressLRText)
 	hbox2.addWidget(self.progressLR)
 
 	vbox.addLayout(hbox1)
 	vbox.addLayout(hbox2)
 
 	self.progress_fr.setLayout(vbox)
-	
+
     def darken(self):
         palette = QtGui.QPalette()
         palette.setColor(QtGui.QPalette.Background,QtCore.Qt.black)

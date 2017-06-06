@@ -18,7 +18,7 @@ class MainWindow(QtGui.QWidget):
 
         self.resize(700, 700)
         self.setFixedWidth(700)
-        self.setFixedHeight(500)
+        self.setFixedHeight(700)
         self.setWindowTitle('MD01 Controller v1.0')
         self.setContentsMargins(0,0,0,0)
         
@@ -47,8 +47,9 @@ class MainWindow(QtGui.QWidget):
         self.initControls()
         self.initMotorCtrl()
         self.initNet()
+	self.initJoystick()
         self.connectSignals()
-    
+
     def setCallback(self, callback):
         self.callback = callback
 
@@ -270,7 +271,7 @@ class MainWindow(QtGui.QWidget):
         self.queryButton  = QtGui.QPushButton("Query")
         self.homeButton   = QtGui.QPushButton("Home")
         self.stopButton   = QtGui.QPushButton("STOP!")
-        
+
         self.autoQuery_cb = QtGui.QCheckBox("Auto Query", self)  #Automatically update ADC voltages checkbox option
         self.autoQuery_cb.setStyleSheet("QCheckBox { font-size: 12px; \
                                                     background-color:rgb(0,0,0); \
@@ -317,11 +318,13 @@ class MainWindow(QtGui.QWidget):
         self.DnLeftButton = QtGui.QPushButton("D+L")
         self.DownButton = QtGui.QPushButton("Down")
         self.DnRightButton = QtGui.QPushButton("D+R")
+	self.JoystickBox = QtGui.QCheckBox("Use Joystick")
 
         vbox = QtGui.QVBoxLayout()
         hbox1 = QtGui.QHBoxLayout()
         hbox2 = QtGui.QHBoxLayout()
         hbox3 = QtGui.QHBoxLayout()
+	hbox4 = QtGui.QHBoxLayout()
 
         hbox1.addWidget(self.UpLeftButton)
         hbox1.addWidget(self.UpButton)
@@ -335,9 +338,12 @@ class MainWindow(QtGui.QWidget):
         hbox3.addWidget(self.DownButton)
         hbox3.addWidget(self.DnRightButton)
 
+	hbox4.addWidget(self.JoystickBox)
+
         vbox.addLayout(hbox1)
         vbox.addLayout(hbox2)
         vbox.addLayout(hbox3)
+	vbox.addLayout(hbox4)
 
         self.ctrl_fr.setLayout(vbox)
 
@@ -348,7 +354,6 @@ class MainWindow(QtGui.QWidget):
         self.elPlusPtOneButton.setText("+0.1")
         self.elPlusPtOneButton.setGeometry(x,y,w,h)
 
-        
         self.elPlusOneButton = QtGui.QPushButton(self.el_fr)
         self.elPlusOneButton.setText("+1.0")
         self.elPlusOneButton.setGeometry(x+s+w,y,w,h)
@@ -428,34 +433,59 @@ class MainWindow(QtGui.QWidget):
         self.button_fr = QtGui.QFrame(self)
         self.button_fr.setFrameShape(QtGui.QFrame.StyledPanel)
         self.button_fr.setFixedWidth(250)
-        self.button_fr.setFixedHeight(90)
+        self.button_fr.setFixedHeight(100)
 
         self.ctrl_fr = QtGui.QFrame(self)
         self.ctrl_fr.setFrameShape(QtGui.QFrame.StyledPanel)
         self.ctrl_fr.setFixedWidth(220)
-        self.ctrl_fr.setFixedHeight(90)
+        self.ctrl_fr.setFixedHeight(100)
 
         self.net_fr = QtGui.QFrame(self)
         self.net_fr.setFrameShape(QtGui.QFrame.StyledPanel)
         self.net_fr.setFixedWidth(200)
-        self.net_fr.setFixedHeight(90)
+        self.net_fr.setFixedHeight(100)
+
+	self.progress_fr = QtGui.QFrame(self)
+	self.progress_fr.setFrameShape(QtGui.QFrame.StyledPanel)
+	self.progress_fr.setFixedWidth(680)
+	self.progress_fr.setFixedHeight(90)
 
         vbox = QtGui.QVBoxLayout()
         hbox1 = QtGui.QHBoxLayout()
         hbox2 = QtGui.QHBoxLayout()
+	hbox4 = QtGui.QHBoxLayout()
 
         hbox1.addWidget(self.az_fr)
         hbox1.addWidget(self.el_fr)
 
         hbox2.addWidget(self.net_fr)
         hbox2.addWidget(self.ctrl_fr)
-        hbox2.addWidget(self.button_fr)        
+        hbox2.addWidget(self.button_fr)
+
+	hbox4.addWidget(self.progress_fr)
 
         vbox.addLayout(hbox1)
         vbox.addLayout(hbox2)
+	vbox.addLayout(hbox4)
 
         self.setLayout(vbox)
 
+    def initJoystick(self):
+	self.progressUD = QtGui.QProgressBar()
+	self.progressLR = QtGui.QProgressBar()
+	
+	vbox = QtGui.QVBoxLayout()
+	hbox1 = QtGui.QHBoxLayout()
+	hbox2 = QtGui.QHBoxLayout()
+
+	hbox1.addWidget(self.progressUD)
+	hbox2.addWidget(self.progressLR)
+
+	vbox.addLayout(hbox1)
+	vbox.addLayout(hbox2)
+
+	self.progress_fr.setLayout(vbox)
+	
     def darken(self):
         palette = QtGui.QPalette()
         palette.setColor(QtGui.QPalette.Background,QtCore.Qt.black)

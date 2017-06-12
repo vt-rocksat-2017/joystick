@@ -23,4 +23,9 @@ class Joystick_Thread(threading.Thread):
 	    self.axis2 = joy1.get_axis(1)
 	    self.axisSpeed = joy1.get_axis(2)
 
-
+    def stop(self):
+	self._stop_event.set()
+	self.stopped = True
+	
+    def stopped(self):
+	return self.stopped

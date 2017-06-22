@@ -24,6 +24,11 @@ class Joystick_Thread(threading.Thread):
 	    self.axisSpeed = joy1.get_axis(2)
 	    clock.tick(8)	#Repeat the loop 8 times a second. Should be fast enough to update MD01 which updates 4 times a second. 
 
+    def refresh(self):
+	self.axisAz = joy1.get_axis(0)
+	self.axisEl = joy1.get_axis(1)
+	self.axisSpeed = joy1.get_axis(2)
+	
     def stop(self):
 	self._stop_event.set()
 	self.stopped = True

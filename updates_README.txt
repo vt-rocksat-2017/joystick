@@ -29,17 +29,21 @@ add a safety button (joystick trigger) to prevent unwanted motor
     control transmission
 STATUS: COMPLETE
 
-
-
+add motor control hex code transmission
+STATUS: COMPLETE
 
 when sync box gets unchecked, the motor event still runs
-STATUS: 
+STATUS: FIXED
 
-add motor control hex code transmission
-STATUS: 
+
+
+
+
+add limits of movement
+STATUS:
 
 add text labels to sync rate and motor control rate text boxes
-STATUS:
+STATUS: unnecessary?
 
 add a "zero" button to calibrate az/el
 STATUS: 

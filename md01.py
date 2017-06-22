@@ -179,8 +179,10 @@ class md01(object):
                 sys.exit()
 
     def set_motor_power(self, az_pwr_percent, el_pwr_percent):
-        self.az_pwr = int(az_pwr_percent * 64)
-        self.el_pwr = int(el_pwr_percent * 64)
+        self.az_pwr = int(az_pwr_percent)
+        self.el_pwr = int(el_pwr_percent)
+        print "---------------------------------------------"
+        print az_pwr_percent
         self.power_cmd[5] = self.az_pwr
         self.power_cmd[10] = self.el_pwr
         print self.az_pwr, self.el_pwr, hexlify(self.power_cmd)

@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser = OptionParser(usage = usage)
     s_help = "IP address of MD01 Controller, Default: 192.168.42.21"
     p_help = "TCP port number of MD01 Controller, Default: 2000"
-    parser.add_option("-a", dest = "ip"  , action = "store", type = "string", default = "192.168.42.21", help = s_help)
+    parser.add_option("-a", dest = "ip"  , action = "store", type = "string", default = "192.168.20.20", help = s_help)
     parser.add_option("-p", dest = "port", action = "store", type = "int"   , default = "2000"         , help = p_help)
     (options, args) = parser.parse_args()
     #--------END Command Line option parser-------------------------------------------------

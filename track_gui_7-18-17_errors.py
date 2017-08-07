@@ -96,24 +96,26 @@ class MainWindow(QtGui.QWidget):
             if abs(self.hatAz) > 1e-6 or abs(self.hatEl) > 1e-6:
                 self.sendFineMotorControl()
                 print "HAT:", self.hatAz, self.hatEl, self.degIncrement
-        
+
+########################
+    def updateAzEl(self):
+	AA = self.callback.get_status()
+	self.refreshCurAzEl = time.time()
+	self.cur_El = AA[2]
+	self.cur_Az = AA[1]
+	self.tar_El = AA[2]
+	self.tar_Az = AA[1]
+	self.callback.cur_el = AA[2]
+	self.callback.cur_az = AA[1]
+########################
+
     def refreshJoyHat(self):
         hat = self.joy1.get_hat( 0 )
         self.hatAz = hat[0]
         self.hatEl = hat[1]
         #send motor control commands from here
         if (abs(self.hatAz) > 1e-6 or abs(self.hatEl) > 1e-6) and time.time() - self.refreshJoyHatTimeout > 1:
-            
-########################
-        #AAA = self.callback.get_status()
-        #self.refreshCurAzEl = time.time()
-        #self.cur_El = AA[2]
-        #self.cur_Az = AA[1]
-        #self.tar_El = AA[2]
-        #self.tar_Az = AA[1]
-        #AAA = self.callback.request_status(
-########################
-
+            self.updateAzEl()
             self.refreshJoyHatTimeout = time.time()
             self.sendFineMotorControl()
             print "HAT:", self.hatAz, self.hatEl, self.degIncrement
@@ -233,7 +235,8 @@ class MainWindow(QtGui.QWidget):
         self.progressLR.show()
         self.progressSpeed.show()
  
-
+        if time.time() - self.refreshCurAzEl > 1:
+            self.updateAzEl()
         
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     def sendMotorControlEvent(self):
@@ -265,13 +268,8 @@ class MainWindow(QtGui.QWidget):
         else:        #trigger button not held
             self.update_motor_control_rate_le.setStyleSheet("QLineEdit {background-color:rgb(255,69,0); color:rgb(0,0,0);}")
 
-        if time.time() - self.refreshCurAzEl > 1:
-            AA = self.callback.get_status()
-            self.refreshCurAzEl = time.time()
-            self.cur_el = AA[2]
-            self.cur_az = AA[1]
-            self.tar_el = AA[2]
-            self.tar_az = AA[1]
+
+
 
 #H1	self.callback.power_cmd[1]
 #---------------------------------
@@ -346,6 +344,7 @@ class MainWindow(QtGui.QWidget):
                 self.finetuneJoy_cb.setCheckState(QtCore.Qt.Unchecked)
                 print self.getTimeStampGMT() + "GUI  | Joystick Motor Control Halted"
                 
+                self.updateAzEl()
                 
                 print self.getTimeStampGMT() + "GUI  | Updated Target Position to Current Position"
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -371,11 +370,9 @@ class MainWindow(QtGui.QWidget):
             print self.getTimeStampGMT() + "GUI  | Joystick Motor Control Halted"
             self.update_motor_control_rate_le.setStyleSheet("QLineEdit {background-color:rgb(255,0,0); color:rgb(0,0,0);}")
             
-            #self.callback.feedback = self.callback.recv_data()
-            #self.callback.convert_feedback() 
-            
-            AAA = self.callback.get_status()
- 
+            self.callback.feedback = self.callback.recv_data()
+            self.callback.convert_feedback() 
+
             #print "--------------------------------" + str(self.callback.cur_el) + "-------" + str(self.callback.cur_az)
             #print "^current--down is target"
             #print "--------------------------------" + str(self.tar_el) + "-------" + str(self.tar_az)
@@ -383,11 +380,7 @@ class MainWindow(QtGui.QWidget):
             #self.tar_az = self.callback.cur_az
             #self.updateAzimuth()
             #self.updateElevation()
-            self.cur_az = AAA[1]
-            self.cur_el = AAA[2]
-            self.tar_az = AAA[1]
-            self.tar_el = AAA[2]
-
+            self.updateAzEl()
             print self.getTimeStampGMT() + "GUI  | Updated Target Position to Current Position"
         else:
             self.useJoystick_cb.safetyFlag = False

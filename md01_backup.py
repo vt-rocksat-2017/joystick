@@ -34,7 +34,7 @@ class md01(object):
         self.feedback   = ''            #Feedback data from socket
         self.stop_cmd   = bytearray()   #Stop Command Message
         self.status_cmd = bytearray()   #Status Command Message
-        self.set_cmd    = bytearray()   #Set Command Message ####### set angle
+        self.set_cmd    = bytearray()   #Set Command Message
         self.clean_cmd  = bytearray()   #Clean Command Message, resets calibration angles in MD01 to 0
         self.motor_cmd  = bytearray()   #Joystick motor control command
         self.cal_cmd    = bytearray()   #Calibration Command, sets feedback position to desired angle
@@ -121,7 +121,7 @@ class md01(object):
             return -1,0,0 #return -1 bad status, 0 for az, 0 for el
         else:
             try:
-                self.sock.send(self.status_cmd)
+                self.sock.send(self.status_cmd) 
                 self.feedback = self.recv_data()          
             except socket.error as msg:
                 print "Exception Thrown: " + str(msg) + " (" + str(self.timeout) + "s)"
@@ -182,8 +182,7 @@ class md01(object):
             return -1
         else:
             try:
-                self.sock.send(self.set_cmd) 
-                print self.power_cmd
+                self.sock.send(hexlify(self.set_cmd)) 
             except socket.error as msg:
                 print "Exception Thrown: " + str(msg)
                 print "Closing socket, Terminating program...."
@@ -209,10 +208,6 @@ class md01(object):
                 sys.exit()
 
     def set_motor_power(self, az_pwr_percent, el_pwr_percent):
-#########################################################################
-        #self.az_pwr = int(az_pwr_percent*64)
-        #self.el_pwr = int(el_pwr_percent*64)
-#$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
         self.az_pwr = int(az_pwr_percent)
         self.el_pwr = int(el_pwr_percent)
         #print "---------------------------------------------"
@@ -246,48 +241,18 @@ class md01(object):
         #print hexlify(feedback)
         return feedback
 
-    def recv_data(self):
-        #receive socket data
-        feedback = ''
-        self.sock.send(self.status_cmd)
-        while True:
-            c = self.sock.recv(1)
-            feedback += str(hexlify(c))
-            print len(feedback), feedback
-            if hexlify(c) == "20":
-                break
-        #print feedback
-        #print len(feedback)
-        #print feedback[15]
-        return feedback
 
-    def recv_data333333(self):
+    def recv_data(self):
         #receive socket data
         feedback = ''
         i = 0
         while i < 12:
             c = self.sock.recv(1)
             print str(i) + " " + hexlify(c)
-            feedback += str(hexlify(c))
+            feedback += c
             i += 1
         #print hexlify(feedback)
         return feedback
-
-    def convert_feedback4444(self):
-        h1 = ord(self.feedback[1])
-        h2 = ord(self.feedback[2])
-        h3 = ord(self.feedback[3])
-        h4 = ord(self.feedback[4])
-        print h1, h2, h3, h4
-        self.cur_az = (h1*100.0 + h2*10.0 + h3 + h4/10.0) - 360.0
-        self.ph = ord(self.feedback[5])
-
-        v1 = ord(self.feedback[6])
-        v2 = ord(self.feedback[7])
-        v3 = ord(self.feedback[8])
-        v4 = ord(self.feedback[9])
-        self.cur_el = (v1*100.0 + v2*10.0 + v3 + v4/10.0) - 360.0
-        self.pv = ord(self.feedback[10])
 
     def convert_feedback(self):
         #print "##################################################"
@@ -301,12 +266,12 @@ class md01(object):
         
         fb = self.feedback
          
-        h1 = int(fb[2]+fb[3],16)
-        h2 = int(fb[4]+fb[5],16)
-        h3 = int(fb[6]+fb[7],16)
-        h4 = int(fb[8]+fb[9],16)
+        h1 = int(str(fb[2])+str(fb[3]),16)
+        h2 = int(str(fb[4])+str(fb[5]),16)
+        h3 = int(str(fb[6])+str(fb[7]),16)
+        h4 = int(str(fb[8])+str(fb[9]),16)
         
-        self.ph = int(fb[10]+fb[11],16)
+        #self.ph = int(str(fb[10])+str(fb[11]),16)
         #ph = int(str(fb[10])+str(fb[11]),16)
 
         v1 = int(fb[12]+fb[13],16)
@@ -319,7 +284,7 @@ class md01(object):
         #v3 = int(str(fb[16])+str(fb[17]),16)
         #v4 = int(str(fb[18])+str(fb[19]),16)
 
-        self.pv = int(fb[20]+fb[21],16)
+        #self.pv = int(str(fb[20])+str(fb[21]),16)
 
         #pv = int(str(fb[20])+str(fb[21]),16)
 
@@ -329,52 +294,19 @@ class md01(object):
         #h2 = ord(self.feedback[2])
         #h3 = ord(self.feedback[3])
         #h4 = ord(self.feedback[4])
-        print h1, h2, h3, h4
+        #print h1, h2, h3, h4
         self.cur_az = (h1*100.0 + h2*10.0 + h3 + h4/10.0) - 360.0
-        print self.cur_az
         #self.ph = ord(self.feedback[5])
 
         #v1 = ord(self.feedback[6])
         #v2 = ord(self.feedback[7])
         #v3 = ord(self.feedback[8])
         #v4 = ord(self.feedback[9])
-        print v1, v2, v3, v4
+
         self.cur_el = (v1*100.0 + v2*10.0 + v3 + v4/10.0) - 360.0
-        print self.cur_el
         #self.pv = ord(self.feedback[10])
 
     def format_set_cmd(self):
-        #make sure cmd_az in range -180 to +540
-        if   (self.cmd_az>540): self.cmd_az = 540
-        elif (self.cmd_az < -180): self.cmd_az = -180
-        #make sure cmd_el in range 0 to 180
-        if   (self.cmd_el < 0): self.cmd_el = 0
-        elif (self.cmd_el>180): self.cmd_el = 180
-        #convert commanded az, el angles into strings
-        cmd_az_str = str(int((float(self.cmd_az) + 360) * self.ph))
-        cmd_el_str = str(int((float(self.cmd_el) + 360) * self.pv))
-        #print target_az, len(target_az)
-        #ensure strings are 4 characters long, pad with 0s as necessary
-        if   len(cmd_az_str) == 1: cmd_az_str = '000' + cmd_az_str
-        elif len(cmd_az_str) == 2: cmd_az_str = '00'  + cmd_az_str
-        elif len(cmd_az_str) == 3: cmd_az_str = '0'   + cmd_az_str
-        if   len(cmd_el_str) == 1: cmd_el_str = '000' + cmd_el_str
-        elif len(cmd_el_str) == 2: cmd_el_str = '00'  + cmd_el_str
-        elif len(cmd_el_str) == 3: cmd_el_str = '0'   + cmd_el_str
-        #print target_az, len(str(target_az)), target_el, len(str(target_el))
-        #update Set Command Message
-        self.set_cmd[1] = cmd_az_str[0]
-        self.set_cmd[2] = cmd_az_str[1]
-        self.set_cmd[3] = cmd_az_str[2]
-        self.set_cmd[4] = cmd_az_str[3]
-        self.set_cmd[5] = self.ph
-        self.set_cmd[6] = cmd_el_str[0]
-        self.set_cmd[7] = cmd_el_str[1]
-        self.set_cmd[8] = cmd_el_str[2]
-        self.set_cmd[9] = cmd_el_str[3]
-        self.set_cmd[10] = self.pv
-
-    def format_set_cmd2(self):
         #make sure cmd_az in range -180 to +540
         if   (self.cmd_az>540): self.cmd_az = 540
         elif (self.cmd_az < -180): self.cmd_az = -180
@@ -400,14 +332,14 @@ class md01(object):
         self.set_cmd[3] = az1
         self.set_cmd[4] = int(azpt1*10)
 
-        self.set_cmd[5] = 10
+        self.set_cmd[5] = 1
         
         self.set_cmd[6] = el100
         self.set_cmd[7] = el10
         self.set_cmd[8] = el1
         self.set_cmd[9] = int(elpt1*10)
 
-        self.set_cmd[10] = 10
+        self.set_cmd[10] = 1
         print hexlify(self.set_cmd)
 
         #self.set_cmd[1] = int(self.cmd_az % 100)
